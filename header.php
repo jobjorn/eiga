@@ -79,6 +79,9 @@
 						<li <?php if (isset($active['dotgraph'])) {
 								echo $active['dotgraph'];
 							} ?>><a href="<?php echo $root_uri; ?>dotgraph/"><span class="glyphicon glyphicon-option-vertical"></span> DOT digraph</a></li>
+						<li <?php if (isset($active['import'])) {
+								echo $active['import'];
+							} ?>><a href="<?php echo $root_uri; ?>import/"><span class="glyphicon glyphicon-import"></span> Import</a></li>
 					<?php
 					}
 					?>
