@@ -73,13 +73,14 @@ function get_movie($id)
 	global $api_key;
 	global $configuration;
 	global $root_uri;
+	global $logged_in_user;
 
 
 
-
-	$sql = "SELECT * FROM eiga_grades WHERE id = :id";
+	$sql = "SELECT eiga_movies.title AS title, eiga_movies.year AS year, eiga_movies.poster AS poster, eiga_movies.overview AS overview, eiga_movies.vote_average AS vote_average, eiga_grades.grade AS grade, eiga_movies.tmdb_id AS tmdb_id FROM eiga_movies JOIN eiga_grades ON eiga_grades.movie_id = eiga_movies.id WHERE eiga_movies.id = :id AND eiga_grades.user_id = :user_id";
 	$statement = $dbh->prepare($sql);
 	$statement->bindParam(":id", $id);
+	$statement->bindParam(":user_id", $logged_in_user->id);
 	$statement->execute();
 
 	$result = $statement->fetchAll(PDO::FETCH_OBJ);

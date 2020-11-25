@@ -70,12 +70,18 @@
 					<li <?php if (isset($active['home'])) {
 							echo $active['home'];
 						} ?>><a href="<?php echo $root_uri; ?>"><span class="glyphicon glyphicon-film"></span> Home</a></li>
-					<li <?php if (isset($active['list'])) {
-							echo $active['list'];
-						} ?>><a href="<?php echo $root_uri; ?>list/"><span class="glyphicon glyphicon-th-list"></span> List</a></li>
-					<li <?php if (isset($active['dotgraph'])) {
-							echo $active['dotgraph'];
-						} ?>><a href="<?php echo $root_uri; ?>dotgraph/"><span class="glyphicon glyphicon-option-vertical"></span> DOT digraph</a></li>
+					<?php
+					if ($logged_in) {
+					?>
+						<li <?php if (isset($active['list'])) {
+								echo $active['list'];
+							} ?>><a href="<?php echo $root_uri; ?>list/"><span class="glyphicon glyphicon-th-list"></span> List</a></li>
+						<li <?php if (isset($active['dotgraph'])) {
+								echo $active['dotgraph'];
+							} ?>><a href="<?php echo $root_uri; ?>dotgraph/"><span class="glyphicon glyphicon-option-vertical"></span> DOT digraph</a></li>
+					<?php
+					}
+					?>
 				</ul>
 
 				<ul class="nav navbar-nav pull-right">

@@ -28,32 +28,34 @@ include("header.php");
 	<div class="col-md-6" id="against">
 		<h3>Won against</h3>
 		<?php
-$sql = "SELECT * FROM eiga_duels WHERE winner = :winner";
-$statement = $dbh->prepare($sql);
-$statement->bindParam(":winner", $id);
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_OBJ);
+		$sql = "SELECT * FROM eiga_duels WHERE winner = :winner AND user_id = :user_id";
+		$statement = $dbh->prepare($sql);
+		$statement->bindParam(":winner", $id);
+		$statement->bindParam(":user_id", $logged_in_user->id);
+		$statement->execute();
+		$result = $statement->fetchAll(PDO::FETCH_OBJ);
 
-foreach($result as $duel){
-	$movie_details = get_movie($duel->loser);
-	echo "<a href='" . $movie_details->url . "'><img src='" . $movie_details->poster_small . "' title='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' alt='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' /></a>";
-}
+		foreach ($result as $duel) {
+			$movie_details = get_movie($duel->loser);
+			echo "<a href='" . $movie_details->url . "'><img src='" . $movie_details->poster_small . "' title='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' alt='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' /></a>";
+		}
 		?>
 
 		<h3>Lost against</h3>
 		<?php
-$i = 0;
+		$i = 0;
 
-$sql = "SELECT * FROM eiga_duels WHERE loser = :loser";
-$statement = $dbh->prepare($sql);
-$statement->bindParam(":loser", $id);
-$statement->execute();
-$result = $statement->fetchAll(PDO::FETCH_OBJ);
+		$sql = "SELECT * FROM eiga_duels WHERE loser = :loser AND user_id = :user_id";
+		$statement = $dbh->prepare($sql);
+		$statement->bindParam(":loser", $id);
+		$statement->bindParam(":user_id", $logged_in_user->id);
+		$statement->execute();
+		$result = $statement->fetchAll(PDO::FETCH_OBJ);
 
-foreach($result as $duel){
-	$movie_details = get_movie($duel->winner);
-	echo "<a href='" . $movie_details->url . "'><img src='" . $movie_details->poster_small . "' title='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' alt='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' /></a>";
-}
+		foreach ($result as $duel) {
+			$movie_details = get_movie($duel->winner);
+			echo "<a href='" . $movie_details->url . "'><img src='" . $movie_details->poster_small . "' title='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' alt='" . htmlentities($movie_details->title, ENT_QUOTES) . " (" . $movie_details->year . ")' /></a>";
+		}
 		?>
 
 	</div>

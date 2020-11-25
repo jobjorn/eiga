@@ -13,13 +13,15 @@ while (true) {
 	$i++;
 
 	if ($i == 1) {
-		$sql = "SELECT DISTINCT id AS winner FROM eiga_grades WHERE id NOT IN (SELECT loser FROM eiga_duels) ORDER BY winner";
+		$sql = "SELECT DISTINCT id AS winner FROM eiga_grades WHERE user_id = :user_id1 AND id NOT IN (SELECT loser FROM eiga_duels WHERE user_id = :user_id2) ORDER BY winner";
 	} else {
 		$list = implode(", ", $winners);
-		$sql = "SELECT DISTINCT id AS winner FROM eiga_grades WHERE id NOT IN (SELECT loser FROM eiga_duels WHERE winner NOT IN (" . $list . ")) ORDER BY winner";
+		$sql = "SELECT DISTINCT id AS winner FROM eiga_grades WHERE user_id = :user_id1 AND id NOT IN (SELECT loser FROM eiga_duels WHERE user_id = :user_id2 AND winner NOT IN (" . $list . ")) ORDER BY winner";
 	}
 
 	$statement = $dbh->prepare($sql);
+	$statement->bindParam(":user_id1", $logged_in_user->id);
+	$statement->bindParam(":user_id2", $logged_in_user->id);
 	$statement->execute();
 	$result = $statement->fetchAll(PDO::FETCH_OBJ);
 
@@ -50,8 +52,10 @@ while (true) {
 
 		$position = 0;
 
-		$sql = "SELECT * FROM eiga_grades ORDER BY CASE WHEN position = 0 THEN (SELECT MAX(position) FROM eiga_grades) + 1 ELSE position END, id";
+		$sql = "SELECT * FROM eiga_grades WHERE user_id = :user_id1 ORDER BY CASE WHEN position = 0 THEN (SELECT MAX(position) FROM eiga_grades WHERE user_id = :user_id2 ) + 1 ELSE position END, id";
 		$statement = $dbh->prepare($sql);
+		$statement->bindParam(":user_id1", $logged_in_user->id);
+		$statement->bindParam(":user_id2", $logged_in_user->id);
 		$statement->execute();
 		$result = $statement->fetchAll(PDO::FETCH_OBJ);
 		$i = 0;
