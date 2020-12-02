@@ -128,7 +128,7 @@ function get_movie($id)
 				$movie->vote_average = $hit->vote_average;
 				$movie->tmdb_id = $hit->id;
 
-				$update_sql = "UPDATE eiga_grades SET title = :title, year = :year, poster = :poster, overview = :overview, vote_average = :vote_average, tmdb_id = :tmdb_id WHERE id = :id";
+				$update_sql = "UPDATE eiga_movies SET title = :title, year = :year, poster = :poster, overview = :overview, vote_average = :vote_average, tmdb_id = :tmdb_id WHERE id = :id";
 				$update_statement = $dbh->prepare($update_sql);
 				$update_statement->bindParam(":title", $movie->title);
 				$update_statement->bindParam(":year", $movie->year);

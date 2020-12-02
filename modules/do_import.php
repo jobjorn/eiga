@@ -5,35 +5,69 @@ require_once("core.php");
 require_once("connection.php");
 
 if ($logged_in) {
-    $import_test = "Date,Name,Year,Letterboxd URI,Rating
-    2019-10-06,Galaxy Quest,1999,https://boxd.it/29gq,1
-    2019-10-06,Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb,1964,https://boxd.it/29eY,5
-    2019-10-06,Gridlock'd,1997,https://boxd.it/1RSQ,2
-    2019-10-06,Catwoman,2004,https://boxd.it/2aBY,1";
-
-    echo "<pre>";
-    print_r($_POST);
-    echo "</pre>";
-    echo "<pre>" . $import_test . "</pre>";
-
-    $imported_rows = explode("\n", $_POST['ratings']);
+    $imported_rows = str_getcsv($_POST['ratings'], "\n");
     foreach ($imported_rows as $row) {
         $movie = str_getcsv($row);
 
-        echo "<pre>";
-        print_r($movie);
-        echo "</pre>";
+        $date = $movie[0];
+        $title = $movie[1];
+        $year = $movie[2];
+        if (strlen($year) < 4) {
+            $year = 0;
+        }
+        $letterboxd_uri = $movie[3];
+        $grade = $movie[4];
+
+        if ($date == "Date") {
+            continue;
+        } else {
+            $sql = "SELECT * FROM eiga_movies WHERE letterboxd_uri = :letterboxd_uri";
+            $statement = $dbh->prepare($sql);
+            $statement->bindParam(":letterboxd_uri", $letterboxd_uri);
+            $statement->execute();
+
+            $result = $statement->fetchAll(PDO::FETCH_OBJ);
+
+            if (count($result) == 0) {
+                $sql = "INSERT INTO eiga_movies (letterboxd_uri, title, year) VALUES (:letterboxd_uri, :title, :year)";
+                $statement = $dbh->prepare($sql);
+                $statement->bindParam(":letterboxd_uri", $letterboxd_uri);
+                $statement->bindParam(":title", $title);
+                $statement->bindParam(":year", $year);
+                $statement->execute();
+                $movie_id = $dbh->lastInsertId();
+            } elseif (count($result) == 1) {
+                $movie_id = $result[0]->id;
+            } else {
+                die("Det är flera filmer med samma letterboxd_uri i databasen");
+            }
+
+            $sql = "SELECT * FROM eiga_grades WHERE user_id = :user_id AND movie_id = :movie_id";
+            $statement = $dbh->prepare($sql);
+            $statement->bindParam(":user_id", $logged_in_user->id);
+            $statement->bindParam(":movie_id", $movie_id);
+            $statement->execute();
+
+            $result = $statement->fetchAll(PDO::FETCH_OBJ);
+
+            if (count($result) == 0) {
+                $sql = "INSERT INTO eiga_grades (user_id, movie_id, grade) VALUES (:user_id, :movie_id, :grade)";
+                $statement = $dbh->prepare($sql);
+                $statement->bindParam(":user_id", $logged_in_user->id);
+                $statement->bindParam(":movie_id", $movie_id);
+                $statement->bindParam(":grade", $grade);
+                $statement->execute();
+            } elseif (count($result) == 1) {
+                $sql = "UPDATE eiga_grades SET grade = :grade WHERE id = :id";
+                $statement = $dbh->prepare($sql);
+                $statement->bindParam(":grade", $grade);
+                $statement->bindParam(":id", $result[0]->id);
+                $statement->execute();
+            } else {
+                die("Det är flera betygsättningar av samma film i databasen");
+            }
+        }
     }
-
-    /* att göra här:
-    1) kontrollera om filmen redan finns i eiga_movies
-        a) via letterboxd_short_url
-    2) om inte, lägg till den där
-    3) lägg till filmen i eiga_grades
-    */
-
-    //    header("Location: " . $root_uri);
-} else {
-
-    //    header("Location: " . $root_uri);
 }
+
+header("Location: " . $root_uri);
