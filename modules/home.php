@@ -16,16 +16,16 @@ include("header.php");
 	<?php
 
 	$position_limits = array();
-	$position_limits[1] = 25;
-	$position_limits[2] = 68;
-	$position_limits[3] = 144;
-	$position_limits[4] = 238;
-	$position_limits[5] = 306;
-	$position_limits[6] = 306;
-	$position_limits[7] = 238;
-	$position_limits[8] = 144;
-	$position_limits[9] = 68;
-	$position_limits[10] = 25;
+	$position_limits[1] = 2;
+	$position_limits[2] = 4;
+	$position_limits[3] = 9;
+	$position_limits[4] = 15;
+	$position_limits[5] = 20;
+	$position_limits[6] = 20;
+	$position_limits[7] = 15;
+	$position_limits[8] = 9;
+	$position_limits[9] = 4;
+	$position_limits[10] = 2;
 
 	$position = 0;
 	$count = 0;
@@ -38,9 +38,13 @@ include("header.php");
 
 	$result = $statement->fetchAll(PDO::FETCH_OBJ);
 	foreach ($result as $position_count) {
-		if ($position_count->count > $position_limits[$position_count->position]) {
-			$position = $position_count->position;
-			$count = $position_count->count;
+		if (isset($position_limits[$position_count->position])) {
+			if ($position_count->count > $position_limits[$position_count->position]) {
+				$position = $position_count->position;
+				$count = $position_count->count;
+				break;
+			}
+		} else {
 			break;
 		}
 	}
@@ -78,6 +82,8 @@ include("header.php");
 			echo "<img src='" . $movie1->poster_large . "' title='" . htmlentities($movie1->title, ENT_QUOTES) . " (" . $movie1->year . ")' alt='" . htmlentities($movie1->title, ENT_QUOTES) . " (" . $movie1->year . ")' />";
 			echo "</a></div>";
 			echo "<p class='overview'>" . $movie1->overview . "</p>";
+			echo "<div class='link_letterboxd'><a href='" . $movie1->letterboxd_uri . "'>Letterboxd</a></div>";
+			echo "<div class='link_tmdb'><a href='https://www.themoviedb.org/movie/" . $movie1->tmdb_id . "'>TMDb</a></div>";
 
 			?>
 		</div>
@@ -91,6 +97,8 @@ include("header.php");
 			echo "<img src='" . $movie2->poster_large . "' title='" . htmlentities($movie2->title, ENT_QUOTES) . " (" . $movie2->year . ")' alt='" . htmlentities($movie2->title, ENT_QUOTES) . " (" . $movie2->year . ")' />";
 			echo "</a></div>";
 			echo "<p class='overview'>" . $movie2->overview . "</p>";
+			echo "<div class='link_letterboxd'><a href='" . $movie2->letterboxd_uri . "'>Letterboxd</a></div>";
+			echo "<div class='link_tmdb'><a href='https://www.themoviedb.org/movie/" . $movie2->tmdb_id . "'>TMDb</a></div>";
 
 			?>
 		</div>

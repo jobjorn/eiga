@@ -67,7 +67,7 @@ function show_movie($id, $size = "large", $duel = false){
 }
 */
 
-function get_movie($id)
+function get_movie($movie_id)
 {
 	global $dbh;
 	global $api_key;
@@ -75,18 +75,28 @@ function get_movie($id)
 	global $root_uri;
 	global $logged_in_user;
 
-
-
-	$sql = "SELECT eiga_movies.title AS title, eiga_movies.year AS year, eiga_movies.poster AS poster, eiga_movies.overview AS overview, eiga_movies.vote_average AS vote_average, eiga_grades.grade AS grade, eiga_movies.tmdb_id AS tmdb_id FROM eiga_movies JOIN eiga_grades ON eiga_grades.movie_id = eiga_movies.id WHERE eiga_movies.id = :id AND eiga_grades.user_id = :user_id";
+	$sql = "SELECT
+		eiga_movies.title AS title,
+		eiga_movies.year AS year,
+		eiga_movies.poster AS poster,
+		eiga_movies.overview AS overview,
+		eiga_movies.vote_average AS vote_average,
+		eiga_grades.grade AS grade,
+		eiga_movies.letterboxd_uri AS letterboxd_uri,
+		eiga_movies.tmdb_id AS tmdb_id
+		FROM eiga_movies
+		JOIN eiga_grades ON eiga_grades.movie_id = eiga_movies.id
+		WHERE eiga_movies.id = :movie_id
+		AND eiga_grades.user_id = :user_id";
 	$statement = $dbh->prepare($sql);
-	$statement->bindParam(":id", $id);
+	$statement->bindParam(":movie_id", $movie_id);
 	$statement->bindParam(":user_id", $logged_in_user->id);
 	$statement->execute();
 
 	$result = $statement->fetchAll(PDO::FETCH_OBJ);
 
 	$movie = new stdClass();
-	$movie->id = $id;
+	$movie->id = $movie_id;
 
 	if (count($result) == 0) {
 		$movie->error = "No result found";
@@ -123,6 +133,9 @@ function get_movie($id)
 
 				$movie->title = $hit->original_title;
 				$movie->year = substr($hit->release_date, 0, 4);
+				if ((int)$movie->year < 1) {
+					$movie->year = 0;
+				}
 				$movie->poster = $hit->poster_path;
 				$movie->overview = $hit->overview;
 				$movie->vote_average = $hit->vote_average;
@@ -140,7 +153,7 @@ function get_movie($id)
 				$update_statement->execute();
 			} else {
 				$movie->poster = "";
-				$movie->overview = "(filmen hittades ej)";
+				$movie->overview = "(filmen hittades ej hos TMDb)";
 				$movie->vote_average = 0;
 				$movie->tmdb_id = 0;
 			}
@@ -150,11 +163,18 @@ function get_movie($id)
 			$movie->poster = $result[0]->poster;
 			$movie->overview = $result[0]->overview;
 			$movie->vote_average = $result[0]->vote_average;
+			$movie->tmdb_id = $result[0]->tmdb_id;
 		}
 		$movie->grade = $result[0]->grade;
-		$movie->poster_large = $configuration->images->base_url . "w500" . $movie->poster;
-		$movie->poster_small = $configuration->images->base_url . "w92" . $movie->poster;
-		$movie->url = $root_uri . "movie/" . $id . "/";
+		$movie->letterboxd_uri = $result[0]->letterboxd_uri;
+		if (strlen($movie->poster) > 0) {
+			$movie->poster_large = $configuration->images->base_url . "w500" . $movie->poster;
+			$movie->poster_small = $configuration->images->base_url . "w92" . $movie->poster;
+		} else {
+			$movie->poster_large = "https://via.placeholder.com/500x750.png?text=" . urlencode($movie->title . " (" . $movie->year . ")");
+			$movie->poster_small = "https://via.placeholder.com/92x138.png?text=" . urlencode($movie->title . " (" . $movie->year . ")");
+		}
+		$movie->url = $root_uri . "movie/" . $movie->id . "/";
 
 		return $movie;
 	}
