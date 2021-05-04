@@ -14,7 +14,7 @@ include("header.php");
     <div class="col-md-12">
         <h1>Letterboxd Import</h1>
         <p>Export your data from Letterboxd and paste the contents of
-            <pre>ratings.csv</pre> in the field below. It should be formatted like this sample:</p>
+        <pre>ratings.csv</pre> in the field below. It should be formatted like this sample:</p>
         <pre>Date,Name,Year,Letterboxd URI,Rating
 2019-10-06,"Three Billboards Outside Ebbing, Missouri",2017,https://boxd.it/ceBS,4
 2020-11-08,My Octopus Teacher,2020,https://boxd.it/prk2,3

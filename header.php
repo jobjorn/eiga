@@ -88,6 +88,9 @@
 						<li <?php if (isset($active['import'])) {
 								echo $active['import'];
 							} ?>><a href="<?php echo $root_uri; ?>import/">🗄️ Import</a></li>
+						<li <?php if (isset($active['settings'])) {
+								echo $active['settings'];
+							} ?>><a href="<?php echo $root_uri; ?>settings/">⚙️ Settings</a></li>
 					<?php
 					}
 					?>
@@ -97,7 +100,7 @@
 					<?php
 					if ($logged_in) {
 					?>
-						<li><a href="<?php echo $root_uri; ?>logout/"><span class="glyphicon glyphicon-log-out"></span> Logga ut <?php echo $logged_in_user->name; ?></a></li>
+						<li><a href="<?php echo $root_uri; ?>logout/">🚪 Logga ut <?php echo $logged_in_user->name; ?></a></li>
 					<?php
 					} else {
 					?>
