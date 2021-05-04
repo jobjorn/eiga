@@ -4,7 +4,8 @@ body {
   padding-bottom: 20px;
 }
 
-#list {
+#list,
+#log {
   width: 100%;
 }
 #list th {
@@ -14,6 +15,14 @@ body {
 #list img,
 #against img {
   padding: 0.2em;
+}
+
+#log td,
+#log th {
+  padding: 0.2em;
+}
+#log .winner {
+  text-align: right;
 }
 
 p.overview {

@@ -69,19 +69,22 @@
 				<ul class="nav navbar-nav">
 					<li <?php if (isset($active['home'])) {
 							echo $active['home'];
-						} ?>><a href="<?php echo $root_uri; ?>"><span class="glyphicon glyphicon-film"></span> Home</a></li>
+						} ?>><a href="<?php echo $root_uri; ?>">🎞️ Home</a></li>
 					<?php
 					if ($logged_in) {
 					?>
 						<li <?php if (isset($active['list'])) {
 								echo $active['list'];
-							} ?>><a href="<?php echo $root_uri; ?>list/"><span class="glyphicon glyphicon-th-list"></span> List</a></li>
+							} ?>><a href="<?php echo $root_uri; ?>list/">🥇 List</a></li>
+						<li <?php if (isset($active['log'])) {
+								echo $active['log'];
+							} ?>><a href="<?php echo $root_uri; ?>log/">🪵 Log</a></li>
 						<li <?php if (isset($active['dotgraph'])) {
 								echo $active['dotgraph'];
-							} ?>><a href="<?php echo $root_uri; ?>dotgraph/"><span class="glyphicon glyphicon-option-vertical"></span> DOT digraph</a></li>
+							} ?>><a href="<?php echo $root_uri; ?>dotgraph/">🌳 DOT digraph</a></li>
 						<li <?php if (isset($active['import'])) {
 								echo $active['import'];
-							} ?>><a href="<?php echo $root_uri; ?>import/"><span class="glyphicon glyphicon-import"></span> Import</a></li>
+							} ?>><a href="<?php echo $root_uri; ?>import/">🗄️ Import</a></li>
 					<?php
 					}
 					?>
