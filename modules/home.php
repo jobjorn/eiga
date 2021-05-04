@@ -78,7 +78,7 @@ include("header.php");
 			echo "<h2>" . $movie1->title . " <small>(" . $movie1->year . ")</small></h2>";
 			echo "<h4>" . show_grade($movie1->grade) . " / " . $movie1->vote_average . "</h4>";
 
-			echo "<div class='effect2'><a href='" . $root_uri . "duel/" . $movie1->id . "/" . $movie2->id . "/'>";
+			echo "<div class='effect2'><a href='" . $root_uri . "duel/" . $movie1->id . "/" . $movie2->id . "/" . latest_duel($logged_in_user->id) . "/'>";
 			echo "<img src='" . $movie1->poster_large . "' title='" . htmlentities($movie1->title, ENT_QUOTES) . " (" . $movie1->year . ")' alt='" . htmlentities($movie1->title, ENT_QUOTES) . " (" . $movie1->year . ")' />";
 			echo "</a></div>";
 			echo "<p class='overview'>" . $movie1->overview . "</p>";
@@ -93,7 +93,7 @@ include("header.php");
 			echo "<h2>" . $movie2->title . " <small>(" . $movie2->year . ")</small></h2>";
 			echo "<h4>" . show_grade($movie2->grade) . " / " . $movie2->vote_average . "</h4>";
 
-			echo "<div class='effect2'><a href='" . $root_uri . "duel/" . $movie2->id . "/" . $movie1->id . "/'>";
+			echo "<div class='effect2'><a href='" . $root_uri . "duel/" . $movie2->id . "/" . $movie1->id . "/" . latest_duel($logged_in_user->id) . "/'>";
 			echo "<img src='" . $movie2->poster_large . "' title='" . htmlentities($movie2->title, ENT_QUOTES) . " (" . $movie2->year . ")' alt='" . htmlentities($movie2->title, ENT_QUOTES) . " (" . $movie2->year . ")' />";
 			echo "</a></div>";
 			echo "<p class='overview'>" . $movie2->overview . "</p>";

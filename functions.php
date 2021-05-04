@@ -348,3 +348,19 @@ function update_list($user_id)
 		}
 	}
 }
+
+function latest_duel($user_id)
+{
+	global $dbh;
+	$sql = "SELECT id FROM eiga_duels WHERE user_id = :user_id ORDER BY id DESC LIMIT 1";
+
+	$statement = $dbh->prepare($sql);
+	$statement->bindParam(":user_id", $user_id);
+	$statement->execute();
+	$result = $statement->fetchAll(PDO::FETCH_OBJ);
+	if (is_numeric($result[0]->id)) {
+		return $result[0]->id;
+	} else {
+		return 0;
+	}
+}
