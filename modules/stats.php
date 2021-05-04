@@ -80,7 +80,7 @@ SELECT grade, COUNT(*) FROM `eiga_grades` WHERE user_id = 1 GROUP BY grade ORDER
         if ($i > 0) {
             echo "</td></tr></table>";
         }
-
+        /*
         $positions_new = array();
         $overshoot = array();
         $both = array();
@@ -102,7 +102,7 @@ SELECT grade, COUNT(*) FROM `eiga_grades` WHERE user_id = 1 GROUP BY grade ORDER
             $position_i++;
         }
 
-
+*/
 
         $count = max(count($grades), count($positions_new));
 

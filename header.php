@@ -82,6 +82,9 @@
 						<li <?php if (isset($active['dotgraph'])) {
 								echo $active['dotgraph'];
 							} ?>><a href="<?php echo $root_uri; ?>dotgraph/">🌳 DOT digraph</a></li>
+						<li <?php if (isset($active['stats'])) {
+								echo $active['stats'];
+							} ?>><a href="<?php echo $root_uri; ?>stats/">📊 Stats</a></li>
 						<li <?php if (isset($active['import'])) {
 								echo $active['import'];
 							} ?>><a href="<?php echo $root_uri; ?>import/">🗄️ Import</a></li>
