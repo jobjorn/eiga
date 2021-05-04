@@ -71,3 +71,25 @@ p.overview {
   padding-right: 0.5em;
   scale: 0.75;
 }
+
+.barchart div {
+  background-color: #bedcfa;
+  padding: 1em 0;
+  display: inline-block;
+}
+.barchart td {
+  padding: 0 1em;
+}
+
+.barchart th {
+  width: 1px;
+  white-space: nowrap;
+}
+
+.barchart-alt div {
+  background-color: #fabedc;
+}
+
+.barchart-alt div.alt {
+  background-color: #befadc;
+}
