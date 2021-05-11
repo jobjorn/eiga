@@ -15,17 +15,29 @@ include("header.php");
 
 	<?php
 
+	$settings_position_limits = json_decode($logged_in_user->settings);
+	$settings_position_limits = explode("\n", $settings_position_limits);
+	$i = 0;
 	$position_limits = array();
-	$position_limits[1] = 2;
-	$position_limits[2] = 4;
-	$position_limits[3] = 9;
-	$position_limits[4] = 15;
-	$position_limits[5] = 20;
-	$position_limits[6] = 20;
-	$position_limits[7] = 15;
-	$position_limits[8] = 9;
-	$position_limits[9] = 4;
-	$position_limits[10] = 2;
+	foreach ($settings_position_limits as $limit) {
+		if (is_numeric(trim($limit))) {
+			$i++;
+			$position_limits[$i] = trim($limit);
+		}
+	}
+
+	if (count($position_limits) < 2) {
+		$sql = "SELECT COUNT(*) as total FROM eiga_grades WHERE user_id = :user_id";
+		$statement = $dbh->prepare($sql);
+		$statement->bindParam(":user_id", $logged_in_user->id);
+		$statement->execute();
+		$result = $statement->fetchAll(PDO::FETCH_OBJ);
+		$total = $result[0]->total;
+
+		for ($i = 1; $i <= 10; $i++) {
+			$position_limits[$i] = distribution_count($i, $total, 10);
+		}
+	}
 
 	$position = 0;
 	$count = 0;

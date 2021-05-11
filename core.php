@@ -61,6 +61,13 @@ try {
 if (isset($_COOKIE['logged_in_user'])) {
 	$logged_in_user = json_decode($_COOKIE['logged_in_user']);
 
+	$sql = "SELECT settings FROM eiga_users WHERE id = :user_id";
+	$statement = $dbh->prepare($sql);
+	$statement->bindParam(":user_id", $logged_in_user->id);
+	$statement->execute();
+	$result = $statement->fetchAll(PDO::FETCH_OBJ);
+	$logged_in_user->settings = $result[0]->settings;
+
 	$options = array("expires" => time() + 1800, "path" => "/", "httponly" => TRUE, "samesite" => "Strict");
 	setcookie("logged_in_user", json_encode($logged_in_user), $options);
 	$logged_in = true;

@@ -5,7 +5,8 @@ body {
 }
 
 #list,
-#log {
+#log,
+#position-limits {
   width: 100%;
 }
 #list th {
@@ -20,6 +21,10 @@ body {
 #log td,
 #log th {
   padding: 0.2em;
+}
+#position-limits td {
+  padding: 1em;
+  vertical-align: top;
 }
 #log .winner {
   text-align: right;
