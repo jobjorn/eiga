@@ -15,7 +15,6 @@ include("header.php");
 <div class="container">
     <div class="col-md-12">
         <h1>Settings</h1>
-        <pre><?php print_r($logged_in_user); ?></pre>
         <p>Enter position limits below - one per row. Suggestions below (normal distributions).</p>
         <form action="<?php echo $root_uri; ?>do_settings" method="post">
             <p><textarea name="position-limits" id="position-limits" style="width: 100%;"><?php echo json_decode($logged_in_user->settings); ?></textarea></p>

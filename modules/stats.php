@@ -38,13 +38,32 @@ include("header.php");
             $positions[$i] = $row->count;
         }
 
-        $count = max(count($grades), count($positions));
-        $sum = array_sum($positions);
-
-        $distributions = array();
-        for ($i = 1; $i <= 5; $i++) {
-            $distributions[$i] = distribution_count($i, $sum, 5);
+        $settings_position_limits = json_decode($logged_in_user->settings);
+        $settings_position_limits = explode("\n", $settings_position_limits);
+        $i = 0;
+        $position_limits = array();
+        foreach ($settings_position_limits as $limit) {
+            if (is_numeric(trim($limit))) {
+                $i++;
+                $position_limits[$i] = trim($limit);
+            }
         }
+
+        if (count($position_limits) < 2) {
+            $sql = "SELECT COUNT(*) as total FROM eiga_grades WHERE user_id = :user_id";
+            $statement = $dbh->prepare($sql);
+            $statement->bindParam(":user_id", $logged_in_user->id);
+            $statement->execute();
+            $result = $statement->fetchAll(PDO::FETCH_OBJ);
+            $total = $result[0]->total;
+
+            for ($i = 1; $i <= 10; $i++) {
+                $position_limits[$i] = distribution_count($i, $total, 10);
+            }
+        }
+
+        $count = max(count($grades), count($positions), count($position_limits));
+        $sum = array_sum($positions);
 
         $i = 0;
         for ($i = 1; $i <= $count; $i++) {
@@ -64,8 +83,8 @@ include("header.php");
             } else {
                 echo "<td>-</td>";
             }
-            if (isset($distributions[$i])) {
-                echo "<td><div style='width: " . $distributions[$i] / max($distributions) * 100 . "%;'>&nbsp;&nbsp;&nbsp;" . $distributions[$i] . "</div></td>";
+            if (isset($position_limits[$i])) {
+                echo "<td><div style='width: " . $position_limits[$i] / max($position_limits) * 100 . "%;'>&nbsp;&nbsp;&nbsp;" . $position_limits[$i] . "</div></td>";
             } else {
                 echo "<td>-</td>";
             }
